@@ -1,2 +1,2 @@
 # Book-Spider
-This is for our project for CSC3380 class. 
+This is our project for our CSC3380 class. 
