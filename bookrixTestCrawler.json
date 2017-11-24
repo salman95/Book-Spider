@@ -1,0 +1,37 @@
+{
+  "_id": "JxLbM2iSibCEonzfb",
+  "clickableElementsSelector": "a:not([rel=nofollow])",
+  "pageFunction": "function pageFunction(context) {\n    // called on every page the crawler visits, use it to extract data from it\n    var $ = context.jQuery;\n    var results = [];\n    if (context.request.type === \"StartUrl\") {\n    \n    $(\".item\").each(function() {\n          //  results.push({\n             //  title: $(this).find(\".word-break\").text() || $(this).find(\".item-title\").text(),\n            //   title: $(this).find(\".item-title\").text().trim(),\n              // author: $(this).find(\".item-author\").text().trim(),\n          \n           \n        //});\n        \n       var i = $(this).find(\".item-title a\").attr(\"href\");\n       context.enqueuePage(\"https://www.bookrix.com\" + i);\n    });\n\n    }\n    else{\n        $(\".mm-page.mm-slideout\").each(function() {\n            var dlCheck = $(this).find(\".noaccess.button.blue.withIcon.read\").attr(\"data-error\");\n            if ( dlCheck !== \"Unfortunately, this book is not available\" ){\n                results.push({\n                    title: $(this).find(\".break-word:eq(0)\").text().trim(),\n                     read: \"https://www.bookrix.com\" + $(this).find(\".button.blue.withIcon.read\").attr(\"href\"),\n                     download:\"https://www.bookrix.com\" + $(this).find(\".button.blue.withIcon.download.download-book\").attr(\"download-data\") ,\n                });\n            }\n            else{context.SkipOutput();}\n        \n        \n          \n           \n     \n    });\n    }\n    \n    return results;\n}",
+  "interceptRequest": "function interceptRequest(context, newRequest) {\n    // called whenever the crawler finds a link to a new page,\n    // use it to override default behavior\n    return newRequest;\n}\n",
+  "loadImages": true,
+  "loadCss": true,
+  "injectJQuery": true,
+  "ignoreRobotsTxt": false,
+  "cookiesPersistence": "PER_PROCESS",
+  "ownerUserId": "DJ5hgZZnQeEyHdttq",
+  "customId": "tsting12",
+  "createdAt": "2017-11-22T19:16:09.775Z",
+  "modifiedAt": "2017-11-22T19:16:09.775Z",
+  "comments": null,
+  "startUrls": [
+    {
+      "key": "StartUrl",
+      "value": "https://www.bookrix.com/search;keywords:romeo%20juliet,searchoption:all.html"
+    }
+  ],
+  "crawlPurls": null,
+  "executeUrl": "https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/JxLbM2iSibCEonzfb/execute?token=tyr7eGTnm6mkaAM34TG5MwHE8",
+  "lastExecution": {
+    "_id": "kZS86KRZw5tGn25pM",
+    "startedAt": "2017-11-24T20:12:50.696Z",
+    "finishedAt": "2017-11-24T20:13:13.272Z",
+    "status": "SUCCEEDED",
+    "pagesCrawled": 6,
+    "detailsUrl": "https://api.apify.com/v1/execs/kZS86KRZw5tGn25pM",
+    "resultsUrl": "https://api.apify.com/v1/execs/kZS86KRZw5tGn25pM/results"
+  },
+  "settingsUrl": "https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/JxLbM2iSibCEonzfb?token=E3he2ZBeQg3ykx3a3E4ww2ySB",
+  "executionsListUrl": "https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/JxLbM2iSibCEonzfb/execs?token=cQdq7bM9wap7hy3qSk9Zbcrqc",
+  "lastExecutionFixedDetailsUrl": "https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/JxLbM2iSibCEonzfb/lastExec?token=cQdq7bM9wap7hy3qSk9Zbcrqc",
+  "lastExecutionFixedResultsUrl": "https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/JxLbM2iSibCEonzfb/lastExec/results?token=cQdq7bM9wap7hy3qSk9Zbcrqc"
+}
