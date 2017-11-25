@@ -1,0 +1,41 @@
+{
+  "_id": "BD5PacpHCNjqPmSHG",
+  "clickableElementsSelector": "a:not([rel=nofollow])",
+  "pageFunction": "function pageFunction(context) {\n    // called on every page the crawler visits, use it to extract data from it\n    var $ = context.jQuery;\n    var categories = [];\n    categories.push({\n        cato: $(this).find(\"li\").attr(\"href\").text()\n        \n    });\n    return categories;\n}",
+  "interceptRequest": "function interceptRequest(context, newRequest) {\n    // called whenever the crawler finds a link to a new page,\n    // use it to override default behavior\n    return newRequest;\n}\n",
+  "loadImages": true,
+  "loadCss": true,
+  "injectJQuery": true,
+  "ignoreRobotsTxt": false,
+  "cookiesPersistence": "PER_PROCESS",
+  "ownerUserId": "uqFbFZBSSYfE7m6WK",
+  "customId": "BookBoon",
+  "createdAt": "2017-11-25T01:20:51.439Z",
+  "modifiedAt": "2017-11-25T01:20:51.439Z",
+  "testUrl": {
+    "key": "",
+    "value": "http://bookboon.com/"
+  },
+  "comments": null,
+  "startUrls": [
+    {
+      "key": "",
+      "value": "http://bookboon.com/"
+    }
+  ],
+  "crawlPurls": null,
+  "executeUrl": "https://api.apify.com/v1/uqFbFZBSSYfE7m6WK/crawlers/BD5PacpHCNjqPmSHG/execute?token=rqoZrSYtd4zdgTvoTiXbCfNaG",
+  "lastExecution": {
+    "_id": "tPrsMTN8JS9r5QmS4",
+    "startedAt": "2017-11-25T02:21:57.703Z",
+    "finishedAt": "2017-11-25T02:22:00.660Z",
+    "status": "SUCCEEDED",
+    "pagesCrawled": 1,
+    "detailsUrl": "https://api.apify.com/v1/execs/tPrsMTN8JS9r5QmS4",
+    "resultsUrl": "https://api.apify.com/v1/execs/tPrsMTN8JS9r5QmS4/results"
+  },
+  "settingsUrl": "https://api.apify.com/v1/uqFbFZBSSYfE7m6WK/crawlers/BD5PacpHCNjqPmSHG?token=84nvqroLQdXo39gdsybgsfszo",
+  "executionsListUrl": "https://api.apify.com/v1/uqFbFZBSSYfE7m6WK/crawlers/BD5PacpHCNjqPmSHG/execs?token=nxAvZxEkMvidabNiCz9YFWnic",
+  "lastExecutionFixedDetailsUrl": "https://api.apify.com/v1/uqFbFZBSSYfE7m6WK/crawlers/BD5PacpHCNjqPmSHG/lastExec?token=nxAvZxEkMvidabNiCz9YFWnic",
+  "lastExecutionFixedResultsUrl": "https://api.apify.com/v1/uqFbFZBSSYfE7m6WK/crawlers/BD5PacpHCNjqPmSHG/lastExec/results?token=nxAvZxEkMvidabNiCz9YFWnic"
+}
