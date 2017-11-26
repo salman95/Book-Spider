@@ -1,0 +1,42 @@
+{
+  "_id": "ybz62kF3LortB2WxP",
+  "clickableElementsSelector": "a:not([rel=nofollow])",
+  "pageFunction": "function pageFunction(context) {\n    // called on every page the crawler visits, use it to extract data from it\n    var $ = context.jQuery;\n    var results = [];\n    $(\".media-body\").each(function() {\n       results.push({\n           title: $(this).find(\".media-heading.lead\").text().trim(),\n           link: $(this).find(\"a\").attr(\"href\")//instead of getting title text, we are getting the link, hence attr(\"href\")\n\n       });\n    });\n    return results;\n    //for the pseudo-url, we are using p=[\\d+] to get more than one page for results\n    //clickable elements will allow you to click on a link. \n}",
+  "interceptRequest": "function interceptRequest(context, newRequest) {\n    // called whenever the crawler finds a link to a new page,\n    // use it to override default behavior\n    return newRequest;\n}\n",
+  "loadImages": true,
+  "loadCss": true,
+  "injectJQuery": true,
+  "ignoreRobotsTxt": false,
+  "cookiesPersistence": "PER_PROCESS",
+  "ownerUserId": "opHbE4yrmFyJX9yi9",
+  "customId": "FreeTechBooks",
+  "createdAt": "2017-11-21T19:31:43.510Z",
+  "modifiedAt": "2017-11-21T19:31:43.510Z",
+  "comments": null,
+  "startUrls": [
+    {
+      "key": "",
+      "value": "http://www.freetechbooks.com/topics"
+    }
+  ],
+  "crawlPurls": [
+    {
+      "key": "",
+      "value": "http://www.freetechbooks.com/topics?page=[\\d+]"
+    }
+  ],
+  "executeUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/ybz62kF3LortB2WxP/execute?token=E6DtxPKqwAEWis77b7NG2NwR5",
+  "lastExecution": {
+    "_id": "cGtPCEcqvvDtjD9yA",
+    "startedAt": "2017-11-26T21:39:28.485Z",
+    "finishedAt": "2017-11-26T21:40:01.989Z",
+    "status": "STOPPED",
+    "pagesCrawled": 5,
+    "detailsUrl": "https://api.apify.com/v1/execs/cGtPCEcqvvDtjD9yA",
+    "resultsUrl": "https://api.apify.com/v1/execs/cGtPCEcqvvDtjD9yA/results"
+  },
+  "settingsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/ybz62kF3LortB2WxP?token=nAPCqog5ArHKE8jEtg5RDuz4Q",
+  "executionsListUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/ybz62kF3LortB2WxP/execs?token=5KLoTtQFyewZfMjNoAtFJLqpy",
+  "lastExecutionFixedDetailsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/ybz62kF3LortB2WxP/lastExec?token=5KLoTtQFyewZfMjNoAtFJLqpy",
+  "lastExecutionFixedResultsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/ybz62kF3LortB2WxP/lastExec/results?token=5KLoTtQFyewZfMjNoAtFJLqpy"
+}
