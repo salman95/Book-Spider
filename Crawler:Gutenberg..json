@@ -1,0 +1,37 @@
+{
+  "_id": "Axcug7M3ewhT4r2Zt",
+  "clickableElementsSelector": "a:not([rel=nofollow])",
+  "pageFunction": "function pageFunction(context) {\n    // called on every page the crawler visits, use it to extract data from it\n    var $ = context.jQuery;\n    var results = [];\n    $(\".cover-thumb.cover-thumb-small\").each(function(){\n       results.push({\n           title: $(this).attr(\"title\"),\n           urlToDownload: $(this).attr(\"href\"),\n           image: $(this).attr(\"style\")\n       });\n        \n    });\n    \n    return results;\n}",
+  "interceptRequest": "function interceptRequest(context, newRequest) {\n    // called whenever the crawler finds a link to a new page,\n    // use it to override default behavior\n    return newRequest;\n}\n",
+  "loadImages": true,
+  "loadCss": true,
+  "injectJQuery": true,
+  "ignoreRobotsTxt": false,
+  "cookiesPersistence": "PER_PROCESS",
+  "ownerUserId": "uqFbFZBSSYfE7m6WK",
+  "customId": "Gutenberg.",
+  "createdAt": "2017-11-27T05:55:44.444Z",
+  "modifiedAt": "2017-11-27T05:55:44.444Z",
+  "comments": null,
+  "startUrls": [
+    {
+      "key": "",
+      "value": "https://www.gutenberg.org/cache/latest-covers"
+    }
+  ],
+  "crawlPurls": null,
+  "executeUrl": "https://api.apify.com/v1/uqFbFZBSSYfE7m6WK/crawlers/Axcug7M3ewhT4r2Zt/execute?token=ukzZnLB7J8xtXmktoHtt5d6L3",
+  "lastExecution": {
+    "_id": "gwb3S4xApvgr3EzCv",
+    "startedAt": "2017-11-27T05:58:14.211Z",
+    "finishedAt": "2017-11-27T05:58:16.332Z",
+    "status": "SUCCEEDED",
+    "pagesCrawled": 1,
+    "detailsUrl": "https://api.apify.com/v1/execs/gwb3S4xApvgr3EzCv",
+    "resultsUrl": "https://api.apify.com/v1/execs/gwb3S4xApvgr3EzCv/results"
+  },
+  "settingsUrl": "https://api.apify.com/v1/uqFbFZBSSYfE7m6WK/crawlers/Axcug7M3ewhT4r2Zt?token=84nvqroLQdXo39gdsybgsfszo",
+  "executionsListUrl": "https://api.apify.com/v1/uqFbFZBSSYfE7m6WK/crawlers/Axcug7M3ewhT4r2Zt/execs?token=9W3SvYaQkm7aKgXGkXj9ozxQC",
+  "lastExecutionFixedDetailsUrl": "https://api.apify.com/v1/uqFbFZBSSYfE7m6WK/crawlers/Axcug7M3ewhT4r2Zt/lastExec?token=9W3SvYaQkm7aKgXGkXj9ozxQC",
+  "lastExecutionFixedResultsUrl": "https://api.apify.com/v1/uqFbFZBSSYfE7m6WK/crawlers/Axcug7M3ewhT4r2Zt/lastExec/results?token=9W3SvYaQkm7aKgXGkXj9ozxQC"
+}
