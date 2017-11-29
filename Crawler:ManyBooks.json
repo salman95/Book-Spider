@@ -1,0 +1,47 @@
+{
+  "_id": "yk8orH4wrSqhKWgwk",
+  "clickableElementsSelector": "a:not([rel=nofollow])",
+  "pageFunction": "function pageFunction(context) {\n    \n    // called on every page the crawler visits, use it to extract data from it\n    var $ = context.jQuery;\n    // We need add Firebase API to crawler\n    var firebaseApi = document.createElement('script');\n    firebaseApi.src = \"https://www.gstatic.com/firebasejs/3.6.10/firebase.js\";\n    document.getElementsByTagName('head')[0].appendChild(firebaseApi);\n    \n    /**\n     * Set config for your Firebase default app\n     * How:\n     * 1. Go to your Firebase project console\n     * 2. Go to Project settings\n     * 3. Click on \"Add Firebase to your web app\" in General tab\n     * 4. Google generates config for you, copy variable config and replace config there\n     * Doc: https://firebase.google.com/docs/database/web/start\n     **/\n    var config = {\n        apiKey: \"AIzaSyBcHTaUBohlQ3rKkz7HTYAssR1TbaPuqfc\",\n        authDomain: \"book-spider.firebaseapp.com\",\n        databaseURL: \"https://book-spider.firebaseio.com\",\n        projectId: \"book-spider\",\n        storageBucket: \"book-spider.appspot.com\",\n        messagingSenderId: \"13688800516\"\n  };\n\n   var results = [];\n   \n    var startedAt = Date.now();\n    var saveResultToDB = function() {\n        // timeout after 30 seconds\n        if( Date.now() - startedAt > 30000 ) {\n            context.finish(\"Timed out before Firebase loaded\");\n            return;\n        }\n        // wait more if firebase not loaded yet\n        if (typeof firebase === 'undefined') {\n            console.log(\"wait more\")\n            setTimeout(function() {saveResultToDB()}, 1000);\n            return;\n        }\n        try {\n            var defaultApp = firebase.initializeApp(config);\n            var ref = firebase.database().ref().child('results/');\n            ref.remove();\n            ref = firebase.database().ref().child('infos/');\n            ref.once('value', function(snapshot) {\n                var dat = snapshot.val();\n                console.log(dat.keywords);\n                var words = dat.keywords.split(\" \");\n                console.log(words);\n                var i;\n                var linker = \"http://manybooks.net/search.php?search=\" + words[0];\n                if(words.length > 1){\n                    for(i = 1; i<words.length; i++){\n                        linker = linker + \"%20\" + words[i];\n                    }\n                }\n                //find1 = linker + \",searchoption:all.html\";\n                //context.enqueuePage(find1);\n\t\t\t\ti = 0;\n                while(i<200){\n                        find = linker + \"&n=\" + i;\n                        context.enqueuePage(find);\n\t\t\t\t\t\ti = i + 50;\n                    }\n                context.finish();\n    \n                \n                });\n            \n        } catch(e) {\n            console.log(\"Error! - \"+e);\n            context.finish(results);\n        }\n    };\n    \n    var secret = \"zKI1NGKT1Seyr5AgejifxYGRjAVP2mmdXp29wsoK\";\n    var dbUrl = \"https://book-spider.firebaseio.com/results.json?auth=\"+secret;\n    \n    var saveToFirebaseDbAndFinish = function(results) {\n        context.willFinishLater();\n        var resultToSave = results;\n        resultToSave.url = context.request.loadedUrl;\n        $.ajax({\n            url: dbUrl,\n            accept: \"application/json\",\n            method: 'POST',\n            contentType: \"application/json; charset=utf-8\",\n            dataType: \"json\",\n            data: JSON.stringify(resultToSave),\n        }).success(function(data) {\n            console.log(\"next\");\n            //context.finish(results);\n        }).fail(function(data) {\n            console.log(\"FAILED!!\");\n            console.log(JSON.stringify(data)); // log for debuging\n            context.finish(results);\n        });\n    }; \n    \n    \n            $(\".row.grid_12\").each(function() {\n                              //  results.push({\n                                 //  title: $(this).find(\".word-break\").text() || $(this).find(\".item-title\").text(),\n                                //   title: $(this).find(\".item-title\").text().trim(),\n                                  // author: $(this).find(\".item-author\").text().trim(),\n                              \n                               \n                            //});\n                            \n                           var i = $(this).find(\"p a\").attr(\"href\");\n                           context.enqueuePage(\"manybooks.net\" + i);\n                        });\n\n    \n           \n                 \n    saveResultToDB();\n    saveToFirebaseDbAndFinish(results);\n    \n    //context.willFinishLater();\n    // Check if firebase is loaded and save result to DB\n \n  //  saveToFirebaseDbAndFinish(results);\n    return results;\n\n}",
+  "interceptRequest": "function interceptRequest(context, newRequest) {\n    // called whenever the crawler finds a link to a new page,\n    // use it to override default behavior\n    return newRequest;\n}\n",
+  "loadImages": true,
+  "loadCss": true,
+  "injectJQuery": true,
+  "ignoreRobotsTxt": false,
+  "cookiesPersistence": "PER_PROCESS",
+  "ownerUserId": "opHbE4yrmFyJX9yi9",
+  "customId": "new many books",
+  "createdAt": "2017-11-28T20:14:07.899Z",
+  "modifiedAt": "2017-11-28T20:14:07.899Z",
+  "comments": null,
+  "startUrls": [
+    {
+      "key": "",
+      "value": "http://manybooks.net/"
+    }
+  ],
+  "crawlPurls": null,
+  "public": {
+    "domain": "",
+    "description": "manybooks revised",
+    "isPublic": true,
+    "isAnonymous": false,
+    "publishedAt": "2017-11-29T01:14:56.768Z",
+    "copyCount": 1,
+    "username": "salman95",
+    "userPictureUrl": "https://cdn.apify.com/img/anonymous_user_picture.png"
+  },
+  "executeUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/yk8orH4wrSqhKWgwk/execute?token=R3QMoKWt2grEwHcGHD3qug3Tn",
+  "lastExecution": {
+    "_id": "oadc4MfRjipG8oC9D",
+    "startedAt": "2017-11-29T23:40:42.860Z",
+    "finishedAt": "2017-11-29T23:42:11.998Z",
+    "status": "SUCCEEDED",
+    "pagesCrawled": 24,
+    "detailsUrl": "https://api.apify.com/v1/execs/oadc4MfRjipG8oC9D",
+    "resultsUrl": "https://api.apify.com/v1/execs/oadc4MfRjipG8oC9D/results"
+  },
+  "settingsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/yk8orH4wrSqhKWgwk?token=nAPCqog5ArHKE8jEtg5RDuz4Q",
+  "executionsListUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/yk8orH4wrSqhKWgwk/execs?token=K9ptQAqfuZmT24FPZWu7pX2gZ",
+  "lastExecutionFixedDetailsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/yk8orH4wrSqhKWgwk/lastExec?token=K9ptQAqfuZmT24FPZWu7pX2gZ",
+  "lastExecutionFixedResultsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/yk8orH4wrSqhKWgwk/lastExec/results?token=K9ptQAqfuZmT24FPZWu7pX2gZ"
+}
