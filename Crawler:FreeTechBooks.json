@@ -1,7 +1,7 @@
 {
-  "_id": "ybz62kF3LortB2WxP",
-  "clickableElementsSelector": "a:not([rel=nofollow])",
-  "pageFunction": "function pageFunction(context) {\n    // called on every page the crawler visits, use it to extract data from it\n    var $ = context.jQuery;\n    var results = [];\n    $(\".media-body\").each(function() {\n       results.push({\n           title: $(this).find(\".media-heading.lead\").text().trim(),\n           link: $(this).find(\"a\").attr(\"href\")//instead of getting title text, we are getting the link, hence attr(\"href\")\n\n       });\n    });\n    return results;\n    //for the pseudo-url, we are using p=[\\d+] to get more than one page for results\n    //clickable elements will allow you to click on a link. \n}",
+  "_id": "nZzuRx7p6TYdgRcCb",
+  "clickableElementsSelector": null,
+  "pageFunction": "function pageFunction(context) {\n    // called on every page the crawler visits, use it to extract data from it\n    var $ = context.jQuery;\n    var firebaseApi = document.createElement('script');\n    firebaseApi.src = \"https://www.gstatic.com/firebasejs/3.6.10/firebase.js\";\n    document.getElementsByTagName('head')[0].appendChild(firebaseApi);\n    \n    var config = {\n        apiKey: \"AIzaSyBcHTaUBohlQ3rKkz7HTYAssR1TbaPuqfc\",\n        authDomain: \"book-spider.firebaseapp.com\",\n        databaseURL: \"https://book-spider.firebaseio.com\",\n        projectId: \"book-spider\",\n        storageBucket: \"book-spider.appspot.com\",\n        messagingSenderId: \"13688800516\"\n    };\n    \n    var results = [];\n    \n    var startedAt = Date.now();\n    var saveResultToDB = function() {\n        // timeout after 30 seconds\n        if( Date.now() - startedAt > 30000 ) {\n            context.finish(\"Timed out before Firebase loaded\");\n            return;\n        }\n        // wait more if firebase not loaded yet\n        if (typeof firebase === 'undefined') {\n            console.log(\"wait more\")\n            setTimeout(function() {saveResultToDB()}, 1000);\n            return;\n        }\n        try {\n            var defaultApp = firebase.initializeApp(config);\n            var ref = firebase.database().ref().child('result/');\n            ref.remove();\n            ref = firebase.database().ref().child('infos/');\n            ref.once('value', function(snapshot) {\n                var dat = snapshot.val();\n                console.log(dat.keywords);\n                var words = dat.keywords.split(\" \");\n                console.log(words);\n                var i;\n                var linker = \"https://www.google.com/search?lr=&as_qdr=all&ei=E7wdWsv1LIbz0wKRupnoDA&q=\" + words[0];\n                if(words.length > 1){\n                    for(i = 1; i<words.length; i++){\n                        linker = linker + \"+\" + words[i];\n                    }\n                }\n                find1 = linker + \"+site%3Afreetechbooks.com&oq=math+textbook+site%3Afreetechbooks.com&gs_l=psy-ab.3...16021.18554.0.18802.13.12.1.0.0.0.149.1198.4j7.11.0....0...1.1.64.psy-ab..2.0.0....0.-u5S4oQkHTM\";\n                context.enqueuePage(find1);\n               \n            //    for(i = 2; i<4; i++){\n              //          find = linker + ;\n                //        context.enqueuePage(find);\n                  //  }\n                context.finish();\n    \n                });\n            \n        } catch(e) {\n            console.log(\"Error! - \"+e);\n            context.finish(results);\n        }\n    };\n    \n    var secret = \"zKI1NGKT1Seyr5AgejifxYGRjAVP2mmdXp29wsoK\";\n    var dbUrl = \"https://book-spider.firebaseio.com/result.json?auth=\"+secret;\n    \n    var saveToFirebaseDbAndFinish = function(results) {\n        context.willFinishLater();\n        var resultToSave = results;\n        resultToSave.url = context.request.loadedUrl;\n        $.ajax({\n            url: dbUrl,\n            accept: \"application/json\",\n            method: 'POST',\n            contentType: \"application/json; charset=utf-8\",\n            dataType: \"json\",\n            data: JSON.stringify(resultToSave),\n        }).success(function(data) {\n            console.log(\"next\");\n            //context.finish(results);\n        }).fail(function(data) {\n            console.log(\"FAILED!!\");\n            console.log(JSON.stringify(data)); // log for debuging\n            context.finish(results);\n        });\n    }; \n    \n    $(\".g\").each(function() {\n           var go = $(this).find(\".r a\").attr(\"href\");\n           context.enqueuePage(go);\n        });\n    \n    var splt = \"\\n\\t\\t\\t\\t\\t\\n\\t\\t\\t\\t\\t\\t\";\n        results.push({\n            title: $(this).find(\".media-heading.lead\").text().trim(),\n            author: $(this).find(\".list-inline:eq(2)\").text().split(splt)[1],\n            download: $(this).find(\".btn.btn-primary\").attr(\"href\")\n        });\n\n   \n    saveResultToDB();\n    saveToFirebaseDbAndFinish(results);\n    return results;\n}",
   "interceptRequest": "function interceptRequest(context, newRequest) {\n    // called whenever the crawler finds a link to a new page,\n    // use it to override default behavior\n    return newRequest;\n}\n",
   "loadImages": true,
   "loadCss": true,
@@ -9,34 +9,29 @@
   "ignoreRobotsTxt": false,
   "cookiesPersistence": "PER_PROCESS",
   "ownerUserId": "opHbE4yrmFyJX9yi9",
-  "customId": "FreeTechBooks",
-  "createdAt": "2017-11-21T19:31:43.510Z",
-  "modifiedAt": "2017-11-21T19:31:43.510Z",
+  "customId": "new free tech books",
   "comments": null,
   "startUrls": [
     {
       "key": "",
-      "value": "http://www.freetechbooks.com/topics"
+      "value": "http://www.google.com"
     }
   ],
-  "crawlPurls": [
-    {
-      "key": "",
-      "value": "http://www.freetechbooks.com/topics?page=[\\d+]"
-    }
-  ],
-  "executeUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/ybz62kF3LortB2WxP/execute?token=E6DtxPKqwAEWis77b7NG2NwR5",
+  "crawlPurls": [],
+  "createdAt": "2017-11-28T22:12:15.977Z",
+  "modifiedAt": "2017-11-28T22:12:15.977Z",
+  "executeUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/nZzuRx7p6TYdgRcCb/execute?token=T93BycwjEqAezCjrANuuF98yb",
   "lastExecution": {
-    "_id": "cGtPCEcqvvDtjD9yA",
-    "startedAt": "2017-11-26T21:39:28.485Z",
-    "finishedAt": "2017-11-26T21:40:01.989Z",
+    "_id": "6HNty22vtwCLswxa7",
+    "startedAt": "2017-11-29T01:05:28.350Z",
+    "finishedAt": "2017-11-29T01:06:00.600Z",
     "status": "STOPPED",
-    "pagesCrawled": 5,
-    "detailsUrl": "https://api.apify.com/v1/execs/cGtPCEcqvvDtjD9yA",
-    "resultsUrl": "https://api.apify.com/v1/execs/cGtPCEcqvvDtjD9yA/results"
+    "pagesCrawled": 8,
+    "detailsUrl": "https://api.apify.com/v1/execs/6HNty22vtwCLswxa7",
+    "resultsUrl": "https://api.apify.com/v1/execs/6HNty22vtwCLswxa7/results"
   },
-  "settingsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/ybz62kF3LortB2WxP?token=nAPCqog5ArHKE8jEtg5RDuz4Q",
-  "executionsListUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/ybz62kF3LortB2WxP/execs?token=5KLoTtQFyewZfMjNoAtFJLqpy",
-  "lastExecutionFixedDetailsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/ybz62kF3LortB2WxP/lastExec?token=5KLoTtQFyewZfMjNoAtFJLqpy",
-  "lastExecutionFixedResultsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/ybz62kF3LortB2WxP/lastExec/results?token=5KLoTtQFyewZfMjNoAtFJLqpy"
+  "settingsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/nZzuRx7p6TYdgRcCb?token=nAPCqog5ArHKE8jEtg5RDuz4Q",
+  "executionsListUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/nZzuRx7p6TYdgRcCb/execs?token=ZHK7v42Kq3HDa3ExsLvuDa3yk",
+  "lastExecutionFixedDetailsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/nZzuRx7p6TYdgRcCb/lastExec?token=ZHK7v42Kq3HDa3ExsLvuDa3yk",
+  "lastExecutionFixedResultsUrl": "https://api.apify.com/v1/opHbE4yrmFyJX9yi9/crawlers/nZzuRx7p6TYdgRcCb/lastExec/results?token=ZHK7v42Kq3HDa3ExsLvuDa3yk"
 }
