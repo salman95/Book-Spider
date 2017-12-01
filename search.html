@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BookSpider - Search</title>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/4.6.2/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/4.6.2/firebase-auth.js"></script>
+    <script defer src="/__/firebase/4.6.2/firebase-database.js"></script>
+    <script defer src="/__/firebase/4.6.2/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/4.6.2/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    
+  </head>
+  <body>
+    <div class="bookshelf">
+      <div class="overlay">
+        <div class="deskmenuSearch">
+          <nav class="searchNav">
+            <li><a class="deskbtn" href="#"><img src="whitemenu.png"/></a>
+              <ul>
+                <li><a href="index.html" style="color: white"> Home </a></li>
+                <li><a href="search.html" style="color: white"> Search </a></li>
+                <li><a href="about.html" style="color: white"> About </a></li>
+                <li><a href="contact.html" style="color: white"td> Contact </a></li>
+              </ul>
+            </li>
+          </nav>
+        </div>
+
+      <h1> SEARCH </h1>
+
+      <form>
+        <input type="text" id="keywords" placeholder="Search by Title, Author, ISBN, etc." onkeydown = "if (event.keyCode == 13)
+                        document.getElementById('save_button' && 'table').click()">
+        <br>
+        <button id="save_button" style="visibility: hidden;" >SEARCH</button>
+        <button id="load_button" style="visibility: hidden;">load</button>
+      </form>
+  
+
+      <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+      <!--<a href="https://my.apify.com/crawlers/Ac6oafhnBGvKWrhzb#/console" id="testingThing" onclick="">work</a> -->
+      <section class = "tableHolder">
+        <table class = "headers">
+          <tr>
+            <td>Source</td>
+            <td>Title</td>
+            <td>Author</td>
+            <td>Read Link</td>
+            <td>Download Link</td>
+          </tr>
+        </table>
+        <table id="myTable">
+        <!--  <tr>
+            <td>Row1 cell1</td>
+            <td>Row1 cell2</td>
+            <td>Row1 cell2</td>
+            <td>Row1 cell2</td>
+            <td>Row1 cell2</td>
+          </tr> -->
+          
+        </table>
+      </section>
+      <br>
+    </div>
+  </div>
+
+<!--
+<button id="table" onclick="myFunction()">Try it</button>
+<script>
+function myFunction() {
+    var table = document.getElementById("myTable");
+    var row = table.insertRow(0);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    cell1.innerHTML = "NEW CELL1";
+    cell2.innerHTML = "NEW CELL2";
+}
+</script> -->
+
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBcHTaUBohlQ3rKkz7HTYAssR1TbaPuqfc",
+    authDomain: "book-spider.firebaseapp.com",
+    databaseURL: "https://book-spider.firebaseio.com",
+    projectId: "book-spider",
+    storageBucket: "book-spider.appspot.com",
+    messagingSenderId: "13688800516"
+  };
+  firebase.initializeApp(config);
+
+  var rootRef = firebase.database().ref().child('infos');
+
+  $('#save_button').click(function(){
+      rootRef.set({
+        keywords:$('#keywords').val()
+      });
+
+      
+
+  });
+  $('#testingThing').click(function(){
+      console.log($('#testingThing').val());
+})
+
+  var ref = firebase.database().ref('results/');
+  ref.on("child_added", function(once){
+  ref.once('value', function(snapshot) {
+    snapshot.forEach(function(userSnapshot){
+      var list = userSnapshot.val();
+      var get = list[0];
+      var title = get.title;
+      var author = get.author;
+      author = author.replace('By:','');
+      var downloadLink = get.download;
+      var readLink = get.read;
+      console.log(title);
+      console.log(downloadLink);
+      console.log(readLink);
+
+     if(readLink == "https://www.bookrix.comundefined" ){
+        readLink = "unavailable";
+        cell4.innerHTML = "Unavailable";
+      }
+      if(readLink == "https://www.bookrix.com#" ){
+        readLink = "unavailable";
+        cell4.innerHTML = "Unavailable";
+      }
+      if(downloadLink == "https://www.bookrix.comundefined"){
+        downloadLink = "unavailable";
+        if( downloadLink == readLink){
+        console.log("skipping");
+      }
+        else{
+          cell5.innerHTML = "Unavailable";
+        }
+      }
+      else{
+        var table = document.getElementById("myTable");
+        var row = table.insertRow(0);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        var cell5 = row.insertCell(4);
+        cell1.innerHTML = "BookRix";
+        cell2.innerHTML = title;
+        cell3.innerHTML = author;
+        var str = "Download";
+        var result = str.link(String(downloadLink));
+        cell5.innerHTML = result;
+        var str = "Read";
+        var result = str.link(String(readLink));
+        cell4.innerHTML = result;
+      }
+});
+});
+});
+
+
+var ref2 = firebase.database().ref('result/');
+  ref2.on("child_added", function(once){
+  ref2.once('value', function(snapshot) {
+    snapshot.forEach(function(userSnapshot){
+      var list = userSnapshot.val();
+      var get = list[0];
+      var title = get.title;
+      var author = get.author;
+      var downloadLink = get.download;
+      var readLink = "-";
+      console.log(title);
+      console.log(downloadLink);
+      console.log(author);
+      if(title.length > 40){
+        title = title.substring(0,40);
+        title += "...";
+      }
+      author = author.replace('Homepage','');
+     // document.getElementById("tableHolder").style.margin-top="0vh";
+      if(downloadLink == "undefined" || "" || null){
+        console.log("skipping");
+      }
+      else{
+        var table = document.getElementById("myTable");
+        var row = table.insertRow(0);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        var cell5 = row.insertCell(4);
+        cell1.innerHTML = "FreeTechBooks";
+        cell2.innerHTML = title;
+        cell3.innerHTML = author;
+        var str = "Download";
+        var result = str.link(String(downloadLink));
+        cell5.innerHTML = result;
+        cell4.innerHTML = readLink;
+      }
+});
+});
+});
+
+var request = new XMLHttpRequest();
+
+request.open('GET', 'https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/AC8WDw7rToStyRPPB?token=E3he2ZBeQg3ykx3a3E4ww2ySB');
+
+request.onreadystatechange = function () {
+  if (this.readyState === 4) {
+    console.log('Status:', this.status);
+    console.log('Headers:', this.getAllResponseHeaders());
+    console.log('Body:', this.responseText);
+  }
+};
+
+request.send();
+
+var request = new XMLHttpRequest();
+
+request.open('POST', 'https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/AC8WDw7rToStyRPPB/execute?token=2L8BSoa5fNErdq9vfKvaNNPEX');
+
+request.setRequestHeader('Content-Type', 'application/json');
+
+request.onreadystatechange = function () {
+  if (this.readyState === 4) {
+    console.log('Status:', this.status);
+    console.log('Headers:', this.getAllResponseHeaders());
+    console.log('Body:', this.responseText);
+  }
+};
+
+var body = {
+  "_id": "AC8WDw7rToStyRPPB",
+  "clickableElementsSelector": null,
+  "pageFunction": "function pageFunction(context) {\n    // called on every page the crawler visits, use it to extract data from it\n    var $ = context.jQuery;\n    var firebaseApi = document.createElement('script');\n    firebaseApi.src = \"https://www.gstatic.com/firebasejs/3.6.10/firebase.js\";\n    document.getElementsByTagName('head')[0].appendChild(firebaseApi);\n    \n    var config = {\n        apiKey: \"AIzaSyBcHTaUBohlQ3rKkz7HTYAssR1TbaPuqfc\",\n        authDomain: \"book-spider.firebaseapp.com\",\n        databaseURL: \"https://book-spider.firebaseio.com\",\n        projectId: \"book-spider\",\n        storageBucket: \"book-spider.appspot.com\",\n        messagingSenderId: \"13688800516\"\n    };\n    \n    var results = [];\n    \n    var startedAt = Date.now();\n    var saveResultToDB = function() {\n        // timeout after 30 seconds\n        if( Date.now() - startedAt > 30000 ) {\n            context.finish(\"Timed out before Firebase loaded\");\n            return;\n        }\n        // wait more if firebase not loaded yet\n        if (typeof firebase === 'undefined') {\n            console.log(\"wait more\")\n            setTimeout(function() {saveResultToDB()}, 1000);\n            return;\n        }\n        try {\n            var defaultApp = firebase.initializeApp(config);\n            var ref = firebase.database().ref().child('result/');\n            ref.remove();\n            ref = firebase.database().ref().child('infos/');\n            ref.once('value', function(snapshot) {\n                var dat = snapshot.val();\n                console.log(dat.keywords);\n                var words = dat.keywords.split(\" \");\n                console.log(words);\n                var i;\n                var linker = \"https://www.google.com/search?q=\" + words[0];\n                if(words.length > 1){\n                    for(i = 1; i<words.length; i++){\n                        linker = linker + \"+\" + words[i];\n                    }\n                }\n                find1 = linker + \"+site:freetechbooks.com&lr=&as_qdr=all&ei=MiMeWpenEcXBjwTM7qSgDw&start=0&sa=N&biw=1866&bih=1062\";\n                context.enqueuePage(find1);\n                               context.finish();\n    \n                });\n            \n        } catch(e) {\n            console.log(\"Error! - \"+e);\n            context.finish(results);\n        }\n    };\n    \n    var secret = \"zKI1NGKT1Seyr5AgejifxYGRjAVP2mmdXp29wsoK\";\n    var dbUrl = \"https://book-spider.firebaseio.com/result.json?auth=\"+secret;\n    \n    var saveToFirebaseDbAndFinish = function(results) {\n        context.willFinishLater();\n        var resultToSave = results;\n        resultToSave.url = context.request.loadedUrl;\n        $.ajax({\n            url: dbUrl,\n            accept: \"application/json\",\n            method: 'POST',\n            contentType: \"application/json; charset=utf-8\",\n            dataType: \"json\",\n            data: JSON.stringify(resultToSave),\n        }).success(function(data) {\n            console.log(\"next\");\n            //context.finish(results);\n        }).fail(function(data) {\n            console.log(\"FAILED!!\");\n            console.log(JSON.stringify(data)); // log for debuging\n            context.finish(results);\n        });\n    }; \n    \n    $(\".g\").each(function() {\n           var go = $(this).find(\".r a\").attr(\"href\");\n           context.enqueuePage(go);\n        });\n    \n    var splt = \"\\n\\t\\t\\t\\t\\t\\n\\t\\t\\t\\t\\t\\t\";\n        results.push({\n            title: $(\".container\").find(\".media-heading.lead\").text().trim(),\n            author: $(\".container\").find(\".list-inline:eq(2)\").text().split(splt)[1],\n            download: $(\".container\").find(\".btn.btn-primary\").attr(\"href\")\n        });\n\n   \n    saveResultToDB();\n    saveToFirebaseDbAndFinish(results);\n    return results;\n}",
+  "interceptRequest": "function interceptRequest(context, newRequest) {\n    // called whenever the crawler finds a link to a new page,\n    // use it to override default behavior\n    return newRequest;\n}\n",
+  "loadImages": true,
+  "loadCss": true,
+  "injectJQuery": true,
+  "ignoreRobotsTxt": false,
+  "cookiesPersistence": "PER_PROCESS",
+  "ownerUserId": "DJ5hgZZnQeEyHdttq",
+  "customId": "FreeTechBooks",
+  "comments": null,
+  "startUrls": [
+    {
+      "key": "",
+      "value": "http://www.google.com"
+    }
+  ],
+  "crawlPurls": [],
+  "createdAt": "2017-11-28T19:29:28.617Z",
+  "modifiedAt": "2017-11-28T19:29:28.617Z",
+  "public": {
+    "domain": "",
+    "description": "nvkldvgn;wprbns",
+    "isPublic": true,
+    "isAnonymous": false,
+    "publishedAt": "2017-11-28T21:31:31.530Z",
+    "copyCount": 1,
+    "username": "kamryngamble",
+    "userPictureUrl": "https://cdn.apify.com/img/anonymous_user_picture.png"
+  },
+  "executeUrl": "https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/AC8WDw7rToStyRPPB/execute?token=2L8BSoa5fNErdq9vfKvaNNPEX",
+  "lastExecution": {
+    "_id": "CqnnhRAHwjqE6H3ey",
+    "startedAt": "2017-11-29T19:04:28.447Z",
+    "finishedAt": "2017-11-29T19:05:17.848Z",
+    "status": "STOPPED",
+    "pagesCrawled": 15,
+    "detailsUrl": "https://api.apify.com/v1/execs/CqnnhRAHwjqE6H3ey",
+    "resultsUrl": "https://api.apify.com/v1/execs/CqnnhRAHwjqE6H3ey/results"
+  },
+  "settingsUrl": "https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/AC8WDw7rToStyRPPB?token=E3he2ZBeQg3ykx3a3E4ww2ySB",
+  "executionsListUrl": "https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/AC8WDw7rToStyRPPB/execs?token=HJizrCp4m4xyJ9Gp44JAwHESJ",
+  "lastExecutionFixedDetailsUrl": "https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/AC8WDw7rToStyRPPB/lastExec?token=HJizrCp4m4xyJ9Gp44JAwHESJ",
+  "lastExecutionFixedResultsUrl": "https://api.apify.com/v1/DJ5hgZZnQeEyHdttq/crawlers/AC8WDw7rToStyRPPB/lastExec/results?token=HJizrCp4m4xyJ9Gp44JAwHESJ"
+};
+
+request.send(JSON.stringify(body));
+
+var delay = ( function() {
+    var timer = 0;
+    return function(callback, ms) {
+        clearTimeout (timer);
+        timer = setTimeout(callback, ms);
+    };
+})();
+
+delay(function(){
+
+var request = new XMLHttpRequest();
+
+request.open('GET', 'https://api.apify.com/v1/GoTpEovy9hyxMnsv5/crawlers/xQp5PSj9NQ4bdtzrp?token=8WD3Yh6atQEMXyJXPMqm26wKr');
+
+request.onreadystatechange = function () {
+  if (this.readyState === 4) {
+    console.log('Status:', this.status);
+    console.log('Headers:', this.getAllResponseHeaders());
+    console.log('Body:', this.responseText);
+  }
+};
+
+request.send(); 
+
+var request = new XMLHttpRequest();
+
+request.open('GET', 'https://api.apify.com/v1/GoTpEovy9hyxMnsv5/crawlers/xQp5PSj9NQ4bdtzrp?token=8WD3Yh6atQEMXyJXPMqm26wKr');
+
+request.onreadystatechange = function () {
+  if (this.readyState === 4) {
+    console.log('Status:', this.status);
+    console.log('Headers:', this.getAllResponseHeaders());
+    console.log('Body:', this.responseText);
+  }
+};
+
+ request.send();
+
+ var request = new XMLHttpRequest();
+
+request.open('POST', 'https://api.apify.com/v1/GoTpEovy9hyxMnsv5/crawlers/xQp5PSj9NQ4bdtzrp/execute?token=K3JSPMrowgtRozRcy6i2sLZs6');
+
+request.setRequestHeader('Content-Type', 'application/json');
+
+request.onreadystatechange = function () {
+  if (this.readyState === 4) {
+    console.log('Status:', this.status);
+    console.log('Headers:', this.getAllResponseHeaders());
+    console.log('Body:', this.responseText);
+  }
+};
+
+var body = {
+   "_id": "xQp5PSj9NQ4bdtzrp",
+  "clickableElementsSelector": null,
+  "pageFunction": "function pageFunction(context) {\n    \n    // called on every page the crawler visits, use it to extract data from it\n    var $ = context.jQuery;\n    // We need add Firebase API to crawler\n    var firebaseApi = document.createElement('script');\n    firebaseApi.src = \"https://www.gstatic.com/firebasejs/3.6.10/firebase.js\";\n    document.getElementsByTagName('head')[0].appendChild(firebaseApi);\n    \n    /**\n     * Set config for your Firebase default app\n     * How:\n     * 1. Go to your Firebase project console\n     * 2. Go to Project settings\n     * 3. Click on \"Add Firebase to your web app\" in General tab\n     * 4. Google generates config for you, copy variable config and replace config there\n     * Doc: https://firebase.google.com/docs/database/web/start\n     **/\n    var config = {\n        apiKey: \"AIzaSyBcHTaUBohlQ3rKkz7HTYAssR1TbaPuqfc\",\n        authDomain: \"book-spider.firebaseapp.com\",\n        databaseURL: \"https://book-spider.firebaseio.com\",\n        projectId: \"book-spider\",\n        storageBucket: \"book-spider.appspot.com\",\n        messagingSenderId: \"13688800516\"\n  };\n\n   var results = [];\n   \n    var startedAt = Date.now();\n    var saveResultToDB = function() {\n        // timeout after 30 seconds\n        if( Date.now() - startedAt > 30000 ) {\n            context.finish(\"Timed out before Firebase loaded\");\n            return;\n        }\n        // wait more if firebase not loaded yet\n        if (typeof firebase === 'undefined') {\n            console.log(\"wait more\")\n            setTimeout(function() {saveResultToDB()}, 1000);\n            return;\n        }\n        try {\n            var defaultApp = firebase.initializeApp(config);\n            var ref = firebase.database().ref().child('results/');\n            ref.remove();\n            ref = firebase.database().ref().child('infos/');\n            ref.once('value', function(snapshot) {\n                var dat = snapshot.val();\n                console.log(dat.keywords);\n                var words = dat.keywords.split(\" \");\n                console.log(words);\n                var i;\n                var linker = \"https://www.bookrix.com/search;keywords:\" + words[0];\n                if(words.length > 1){\n                    for(i = 1; i<words.length; i++){\n                        linker = linker + \"%20\" + words[i];\n                    }\n                }\n                find1 = linker + \",searchoption:all.html\";\n                context.enqueuePage(find1);\n                for(i = 2; i<4; i++){\n                        find = linker + \",searchoption:all,page:\" + i +\".html\";\n                        context.enqueuePage(find);\n                    }\n                context.finish();\n    \n                \n                });\n            \n        } catch(e) {\n            console.log(\"Error! - \"+e);\n            context.finish(results);\n        }\n    };\n    \n    var secret = \"zKI1NGKT1Seyr5AgejifxYGRjAVP2mmdXp29wsoK\";\n    var dbUrl = \"https://book-spider.firebaseio.com/results.json?auth=\"+secret;\n    \n    var saveToFirebaseDbAndFinish = function(results) {\n        context.willFinishLater();\n        var resultToSave = results;\n        resultToSave.url = context.request.loadedUrl;\n        $.ajax({\n            url: dbUrl,\n            accept: \"application/json\",\n            method: 'POST',\n            contentType: \"application/json; charset=utf-8\",\n            dataType: \"json\",\n            data: JSON.stringify(resultToSave),\n        }).success(function(data) {\n            console.log(\"next\");\n            //context.finish(results);\n        }).fail(function(data) {\n            console.log(\"FAILED!!\");\n            console.log(JSON.stringify(data)); // log for debuging\n            context.finish(results);\n        });\n    }; \n    \n    \n            $(\".item\").each(function() {\n                              //  results.push({\n                                 //  title: $(this).find(\".word-break\").text() || $(this).find(\".item-title\").text(),\n                                //   title: $(this).find(\".item-title\").text().trim(),\n                                  // author: $(this).find(\".item-author\").text().trim(),\n                              \n                               \n                            //});\n                            \n                           var i = $(this).find(\".item-title a\").attr(\"href\");\n                           context.enqueuePage(\"https://www.bookrix.com\" + i);\n                        });\n\n    \n           \n                $(\".mm-page.mm-slideout\").each(function() {\n                        var dlCheck = $(this).find(\".noaccess.button.blue.withIcon.read\").attr(\"data-error\");\n                        console.log(\"do this work\");\n                        if ( dlCheck !== \"Unfortunately, this book is not available\" ){\n                            results.push({\n                                title: $(this).find(\".break-word:eq(0)\").text().trim(),\n                                author: $(this).find(\".big\").text().trim(),\n                                read: \"https://www.bookrix.com\" + $(this).find(\".button.blue.withIcon.read\").attr(\"href\"),\n                                download:\"https://www.bookrix.com\" + $(this).find(\".button.blue.withIcon.download.download-book\").attr(\"data-download\")\n                            });\n                        }\n                        else{context.SkipOutput();}\n                    \n                });\n    saveResultToDB();\n    saveToFirebaseDbAndFinish(results);\n    \n    //context.willFinishLater();\n    // Check if firebase is loaded and save result to DB\n \n  //  saveToFirebaseDbAndFinish(results);\n    return results;\n\n}",
+  "interceptRequest": "function interceptRequest(context, newRequest) {\n    // called whenever the crawler finds a link to a new page,\n    // use it to override default behavior\n    return newRequest;\n}",
+  "loadImages": true,
+  "loadCss": true,
+  "injectJQuery": true,
+  "ignoreRobotsTxt": false,
+  "cookiesPersistence": "PER_PROCESS",
+  "ownerUserId": "GoTpEovy9hyxMnsv5",
+  "customId": "Firebase DB integration v2",
+  "comments": null,
+  "startUrls": [
+    {
+      "key": "",
+      "value": "https://www.bookrix.com"
+    }
+  ],
+  "crawlPurls": [],
+  "considerUrlFragment": false,
+  "injectUnderscoreJs": false,
+  "skipLoadingFrames": false,
+  "verboseLog": false,
+  "disableWebSecurity": false,
+  "maxCrawledPages": null,
+  "maxOutputPages": null,
+  "maxCrawlDepth": null,
+  "timeout": null,
+  "resourceTimeout": null,
+  "pageLoadTimeout": null,
+  "pageFunctionTimeout": null,
+  "maxInfiniteScrollHeight": null,
+  "randomWaitBetweenRequests": null,
+  "maxCrawledPagesPerSlave": null,
+  "maxParallelRequests": null,
+  "cookies": null,
+  "customHttpHeaders": [],
+  "customProxies": "",
+  "customData": "",
+  "finishWebhookUrl": null,
+  "createdAt": "2017-11-30T05:37:26.021Z",
+  "modifiedAt": "2017-11-30T05:37:26.021Z",
+  "executeUrl": "https://api.apify.com/v1/GoTpEovy9hyxMnsv5/crawlers/xQp5PSj9NQ4bdtzrp/execute?token=K3JSPMrowgtRozRcy6i2sLZs6",
+  "lastExecution": {
+    "_id": "D7225nZZ6Pdrtjfq2",
+    "startedAt": "2017-11-30T15:55:35.692Z",
+    "finishedAt": "2017-11-30T15:55:48.082Z",
+    "status": "STOPPED",
+    "pagesCrawled": 4,
+    "detailsUrl": "https://api.apify.com/v1/execs/D7225nZZ6Pdrtjfq2",
+    "resultsUrl": "https://api.apify.com/v1/execs/D7225nZZ6Pdrtjfq2/results"
+  },
+  "settingsUrl": "https://api.apify.com/v1/GoTpEovy9hyxMnsv5/crawlers/xQp5PSj9NQ4bdtzrp?token=8WD3Yh6atQEMXyJXPMqm26wKr",
+  "executionsListUrl": "https://api.apify.com/v1/GoTpEovy9hyxMnsv5/crawlers/xQp5PSj9NQ4bdtzrp/execs?token=Anvwm2hzQxt2JHL9KbkiMY9zT",
+  "lastExecutionFixedDetailsUrl": "https://api.apify.com/v1/GoTpEovy9hyxMnsv5/crawlers/xQp5PSj9NQ4bdtzrp/lastExec?token=Anvwm2hzQxt2JHL9KbkiMY9zT",
+  "lastExecutionFixedResultsUrl": "https://api.apify.com/v1/GoTpEovy9hyxMnsv5/crawlers/xQp5PSj9NQ4bdtzrp/lastExec/results?token=Anvwm2hzQxt2JHL9KbkiMY9zT"
+};
+
+request.send(JSON.stringify(body));
+}, 125000 );
+</script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+        // // The Firebase SDK is initialized and available here!
+        //
+        // firebase.auth().onAuthStateChanged(user => { });
+        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+        // firebase.messaging().requestPermission().then(() => { });
+        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+        //
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+        try {
+          let app = firebase.app();
+          let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
+          document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
+        } catch (e) {
+          console.error(e);
+          document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
+        }
+      });
+    </script>
+</body>
+</html>

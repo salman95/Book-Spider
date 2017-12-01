@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>BookSpider - Search</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body>
+<form>
+  INFO1 : <input type="text" id="keywords" onkeydown = "if (event.keyCode == 13)
+                        document.getElementById('save_button').click()"    ><br>
+  <button id="save_button">SEARCH</button>
+</form>
+  <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBcHTaUBohlQ3rKkz7HTYAssR1TbaPuqfc",
+    authDomain: "book-spider.firebaseapp.com",
+    databaseURL: "https://book-spider.firebaseio.com",
+    projectId: "book-spider",
+    storageBucket: "book-spider.appspot.com",
+    messagingSenderId: "13688800516"
+  };
+  firebase.initializeApp(config);
+
+  var rootRef = firebase.database().ref().child('infos');
+
+  $('#save_button').click(function(){
+      rootRef.set({
+        keywords:$('#keywords').val()
+      });
+
+  })
+</script>
+
+</body>
+</html>
